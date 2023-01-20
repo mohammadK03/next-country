@@ -1,0 +1,15 @@
+.name {
+    font-size: 1.45rem;
+    font-weight: 800;
+}
+
+.attribute {
+    font-size: .85rem;
+    font-weight: 600;
+    margin-right: .25rem;
+}
+
+.attributeValue {
+    font-size: .85rem;
+    opacity: .9;
+}

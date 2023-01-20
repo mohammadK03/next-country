@@ -7,7 +7,7 @@ const Country = (props) => {
         <Link className="unset" 
         href={`/country/${props.country.name.official ? props.country.name.official : props.country.name}`}>
             <div className="w-[20rem] mx-auto h-[26rem] rounded-lg bg-light cursor-pointer hover:scale-[1.12] duration-200 transition-all">
-                <img className="aspect-[4/3] rounded-t-lg"
+                <img className="w-full rounded-t-lg h-[50%]"
                 src={props.country.flags.png}></img>
                 <div className="flex flex-col p-5 space-y-1">
                     <h1 className="text-lg font-bold mb-2.5"> {props.country.name.common ? props.country.name.common : props.country.name} </h1>

@@ -26,6 +26,10 @@ const Search = () => {
         (router.query.option && countries) && filterByRegion(router.query.option);
     }, [router.query.option, countries])
 
+    // useEffect(() => {
+    //     sortCountries();
+    // }, [router.query.sortBy])
+
     const filterByRegion = (option) => {
         const filteredCountries = countries.filter(country => {
             console.log(country.region === option)
@@ -34,6 +38,18 @@ const Search = () => {
 
         setFilteredCountries(filteredCountries);
     }
+
+    // const sortCountries = () => {
+    //     if (router.query.sortBy) {
+    //         const sorted = filteredCountries.sort((a, b) => {
+    //             return a.population - b.population;
+    //         })
+
+    //         setFilteredCountries(sorted);
+
+    //         console.log('dcniwejnc')
+    //     }
+    // }
 
     return (
         <div className="w-full h-full bg-light-main pb-[4rem]">

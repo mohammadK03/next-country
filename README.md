@@ -43,3 +43,7 @@ All the default challenges implemented as well as some of the bonus ones.
 
 here is a link to the demo:
 https://country-next.netlify.app/
+
+NOTE: 
+I'm more expericed in Nuxt js than Next js. 
+I was gonna use asyncData in nuxt and handle queries using watch queries but the API seems to have problem and returns error, so I did it using next js as perfect as I could.

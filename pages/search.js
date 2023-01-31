@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import Countries from "@/components/countries";
 import Filter from "@/components/filter";
-import { findDOMNode } from "react-dom";
 
 const Search = () => {
     const router = useRouter();
@@ -12,14 +11,19 @@ const Search = () => {
     const { term, option, sortBy } = router.query;
 
     useEffect(() => {
-            const url = term ? `https://restcountries.com/v2/name/${term}` : `https://restcountries.com/v2/all`;
+            const url = term !== "" ? `https://restcountries.com/v2/name/${term}` : `https://restcountries.com/v2/all`;
             searchCountries(url);
         },
     [term]);
 
     const searchCountries = async (url) => {
-        let res = await axios.get(url);
-        setCountries(res.data);
+        try {
+            let res = await axios.get(url);
+            if (res && res.data) setCountries(res.data);
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
     useEffect(() => {
@@ -67,9 +71,12 @@ const Search = () => {
             <div className="w-[85%] mx-auto">
                 <Filter />
                 {
-                    filteredCountries && 
+                    filteredCountries ? (
                         <Countries
                         countries={filteredCountries}></Countries>
+                    ) : (
+                        <h2 className="text-center font-semibold text-lg"> No result found! </h2>
+                    )
                 }
             </div>
         </div>

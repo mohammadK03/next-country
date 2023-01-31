@@ -6,32 +6,34 @@ const Filter = (props) => {
     const [selectedOption, setSelectedOption] = useState("");
     const [sortBy, setSortBy] = useState([]);
     const router = useRouter();
+    const { query } = router;
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        router.push(`/search?term=${searchTerm}&option=${selectedOption}`);
+    const handleSearch = ({ term, option, sortBy }) => {
+        // e.preventDefault();
+        term ? (query.term = term) : query.term;
+        option ? (query.option = option) : query.option;
+        sortBy ? (query.sortBy = sortBy) : query.sortBy;
+
+        router.push({
+            pathname: "/search",
+            query
+        });
     };
 
-    const onSubmitOption = (e) => {
-        router.push(`/search?term=${searchTerm}&option=${e.target.value}`);
+    const onSearchTerm = (e) => {
+        (e.key === "Enter") && (
+            e.preventDefault(),
+            handleSearch({ term: e.target.value })
+        )
     }
 
-    const onSortBy = (sort) => {
-        sortBy.includes(sort) ? 
-            sortBy.splice(sortBy.indexOf(sort), 1) :
-            sortBy.push(sort);
-        setSortBy(sortBy);
-        router.push(`/search?term${searchTerm}&option=${selectedOption}&sortBy=${sortBy.join(",")}`)
+    const onOption = (e) => {
+        handleSearch({ option: e.target.value })
     }
 
-    useEffect(() => {
-        if (router.query.term || router.query.option) {
-            const term = router.query.term;
-            const option = router.query.option;
-            term && setSearchTerm(term);
-            option && setSelectedOption(option);
-        }
-    }, [router.query.term, router.query.option])
+    const onSort = (e) => {
+        handleSearch({ sortBy: e.target.value })
+    }
 
 
     return (
@@ -40,8 +42,7 @@ const Filter = (props) => {
             <div className="relative px-[3.5rem] bg-light rounded-md shadow-sm md:w-[35%] w-full h-[3.5rem]">
                 <input className="w-full h-full text-sm outline-none bg-transparent"
                     type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => onSearchTerm(e)}
                     placeholder="Search for a country..."
                 />
                 <img className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 gray-svg"
@@ -49,15 +50,26 @@ const Filter = (props) => {
                 alt="" />
             </div>
             <div className="flex flex-row items-center space-x-3">
-                {/* <h3>Sort:</h3>
-                <span className={`bg-light px-3 h-[3.5rem] rounded-md flex items-center justify-center cursor-pointer hover:scale-110 duration-200 transition-all ${sortBy.includes('population') ? 'bg-blue-100' : ''}`}
-                onClick={() => onSortBy('population')}> Population </span>
+                <h3>Sort:</h3>
+                {/* <span className={`bg-light px-3 h-[3.5rem] rounded-md flex items-center justify-center cursor-pointer hover:scale-110 duration-200 transition-all ${sortBy.includes('population') ? 'bg-blue-100' : ''}`}
+                onClick={() => onSort('population')}> Population </span>
                 <span className={`bg-light px-3 h-[3.5rem] rounded-md flex items-center justify-center cursor-pointer hover:scale-110 duration-200 transition-all ${sortBy.includes('country-name') ? 'bg-blue-100' : ''}`}
-                onClick={() => onSortBy('country-name')}> Country Name </span> */}
+                onClick={() => onSort('country-name')}> Country Name </span> */}
+                <select
+                className="w-[10rem] h-[3.5rem] rounded-md shadow-sm outline-none bg-light mt-[3rem] md:mt-0"
+                    onChange={e => onSort(e)}
+                >
+                    <option value="">Sort by options</option>
+                    <option value="ascending-population"> Ascending population </option>
+                    <option value="descending-population"> Descending population </option>
+                    <option value="country-name"> Country name </option>
+                </select>
+
+                <h3>filter:</h3>
                 <select
                 className="w-[10rem] h-[3.5rem] rounded-md shadow-sm outline-none bg-light mt-[3rem] md:mt-0"
                     value={selectedOption}
-                    onChange={e => onSubmitOption(e)}
+                    onChange={e => onOption(e)}
                 >
                     <option value="">Filter by Region</option>
                     <option value="Africa">Africa</option>

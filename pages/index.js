@@ -7,12 +7,9 @@ import { useEffect, useRef, useState } from "react";
 export default function Home(props) {
   const [countries, setCountries] = useState(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     getCountries();
-
-
   }, [])
 
   const getCountries = async () => {

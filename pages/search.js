@@ -3,53 +3,64 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import Countries from "@/components/countries";
 import Filter from "@/components/filter";
+import { findDOMNode } from "react-dom";
 
 const Search = () => {
     const router = useRouter();
-    const name = router.query.term;
     const [countries, setCountries] = useState(null);
     const [filteredCountries, setFilteredCountries] = useState(null);
+    const { term, option, sortBy } = router.query;
 
     useEffect(() => {
-        const url = name ? `https://restcountries.com/v2/name/${name}` : `https://restcountries.com/v2/all`;
-        searchCountries(url);
-    },
-    [name]);
+            const url = term ? `https://restcountries.com/v2/name/${term}` : `https://restcountries.com/v2/all`;
+            searchCountries(url);
+        },
+    [term]);
 
     const searchCountries = async (url) => {
         let res = await axios.get(url);
         setCountries(res.data);
-        setFilteredCountries(res.data);
     }
 
     useEffect(() => {
-        (router.query.option && countries) && filterByRegion(router.query.option);
-    }, [router.query.option, countries])
+        countries && filter();
+    }, [term, option, sortBy, countries])
 
-    // useEffect(() => {
-    //     sortCountries();
-    // }, [router.query.sortBy])
+    const filter = () => {
+        console.log('filter')
+        console.log(term, 'term')
+        console.log(countries, 'c')
 
-    const filterByRegion = (option) => {
-        const filteredCountries = countries.filter(country => {
-            console.log(country.region === option)
-            return country.region === option;
-        })
+        let filteredArray = countries;
 
-        setFilteredCountries(filteredCountries);
+        if (option) {
+            filteredArray = filteredArray.filter((country, i) => {
+                return country.region === option;
+            })
+
+            console.log(filteredArray, "fa")
+        }
+        if (sortBy) {
+            if (sortBy === "ascending-population") {
+                filteredArray = filteredArray.sort((a, b) => {
+                    return a.population - b.population;
+                })
+                console.log(filteredArray, 'sort by changed')
+            } 
+            if (sortBy === "descending-population") {
+                filteredArray = filteredArray.sort((a, b) => {
+                    return b.population - a.population;
+                })
+            } 
+            if (sortBy === "country-name") {
+                filteredArray = filteredArray.sort((a, b) => {
+                    return a.name.localeCompare(b.name) ;
+                })
+            }
+        }
+
+        setFilteredCountries(filteredArray);
     }
-
-    // const sortCountries = () => {
-    //     if (router.query.sortBy) {
-    //         const sorted = filteredCountries.sort((a, b) => {
-    //             return a.population - b.population;
-    //         })
-
-    //         setFilteredCountries(sorted);
-
-    //         console.log('dcniwejnc')
-    //     }
-    // }
 
     return (
         <div className="w-full h-full bg-light-main pb-[4rem]">
